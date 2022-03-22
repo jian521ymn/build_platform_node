@@ -1,13 +1,32 @@
 const express = require('express');
-const route = express.Router()
+const route = express.Router();
+const {success} =require('jian_ymn_node')
+const mysqlConnection = require('../../../mysql/mysql');
+const {
+    updateMyspl,
+    queryMyspl,
+    addMyspl,
+} = require('../../../utils/operationMysql');
 
-//=>增加用户信息
-route.get('/start', (req, res) => {
-    res.send({msg: '2'});
-    // const params =userParams({...req.body,operatingor:req.query.userNames})
-	// const userAddSql = addMyspl({name:'USER',params})
-    // mysqlConnection({querySql:userAddSql,res}).then(({result})=>{
-    //     res.send(success(true, {msg: 'Ok'}));
-    // })
+
+//=> 项目列表
+route.get('/list', (req, res) => {
+    const {page_size,page_num} = req.query;
+	const loginQuerySql = queryMyspl({
+        name:"BUILD_INFO_LIST",
+        params:{
+            isDelete:"0",
+        }
+	})
+    mysqlConnection({
+        res, 
+        querySql:loginQuerySql,
+    })
+    .then(({result})=>{
+        console.log(result);
+        res.send(success(true,{
+            data:result
+        }));
+    })
 });
 module.exports = route;

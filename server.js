@@ -1,8 +1,7 @@
 const CONFIG = require('./config'),
 	session = require('express-session'),
 	cookieParser=require("cookie-parser"),
-	bodyParser = require('body-parser'),
-    fs = require('fs');
+	bodyParser = require('body-parser')
 /*-CREATE SERVER-*/
 const express = require('express'),
 	app = express();
@@ -34,14 +33,10 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-// app.use(async (req, res, next) => {
-// 	req.$customerDATA = filterInvalid(JSON.parse(await readFile('./json/customer.json')));
-// 	req.$departmentDATA = filterInvalid(JSON.parse(await readFile('./json/department.json')));
-// 	req.$jobDATA = filterInvalid(JSON.parse(await readFile('./json/job.json')));
-// 	req.$userDATA = filterInvalid(JSON.parse(await readFile('./json/user.json')));
-// 	req.$visitDATA = filterInvalid(JSON.parse(await readFile('./json/visit.json')));
-// 	next();
-// });
+app.use(async (req, res, next) => {
+	// 前置校验
+	next()
+});
 
 /*-ROUTE-*/
 app.use('/api/build_project', require('./routes/api/build_project/index.js'));
@@ -51,21 +46,5 @@ app.use((req, res) => {
 	res.send('NOT FOUND!');
 });
 
-console.log('启动API自动生成命令成功...');
-fs.watch('./', {
-    recursive: true
-}, ((event, filename) => {
-    console.warn(new Date(),' 检测到文件变化，正在执行编译命令...' );
-    const exec = require('child_process').exec;
-    const cmdStr = 'node server.js';
-    exec(cmdStr, (err, stdout, stderr) => {
-        if (err){
-            console.log(err);
-            console.warn(new Date(),' API文档编译命令执行失败');
-        } else {
-            console.log(stdout);
-            console.warn(new Date(),' API文档编译命令执行成功');
-        }
-    });
-}))
+
 
