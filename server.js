@@ -52,20 +52,5 @@ app.use((req, res) => {
 });
 
 console.log('启动API自动生成命令成功...');
-fs.watch('./', {
-    recursive: true
-}, ((event, filename) => {
-    console.warn(new Date(),' 检测到文件变化，正在执行编译命令...' );
-    const exec = require('child_process').exec;
-    const cmdStr = 'node server.js';
-    exec(cmdStr, (err, stdout, stderr) => {
-        if (err){
-            console.log(err);
-            console.warn(new Date(),' API文档编译命令执行失败');
-        } else {
-            console.log(stdout);
-            console.warn(new Date(),' API文档编译命令执行成功');
-        }
-    });
-}))
+
 
