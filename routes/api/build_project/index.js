@@ -249,6 +249,7 @@ const updateStaus=(item_key,status,res)=>{
 //=> 发布流程
 route.post('/build', (req, res) => {
     const {name, origin_ssh_url,branch,item_key} = req.body
+    res.send(success(true,{}))
     // 1.git 拉取
     updateStaus(item_key,1,res)
     .then(res_=>{
