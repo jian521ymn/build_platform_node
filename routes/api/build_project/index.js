@@ -173,7 +173,7 @@ route.post('/edit', (req, res) => {
 //=> 分支拉取更新
 setInterval(() => {
     // 定时任务，每隔一分钟更新一次分支列表
-    execPromise('cd /www/code')
+    execPromise('cd /www/code && ls')
     .then((res) => {
         const {err,stdout} =res || {};
         if(err)return;
