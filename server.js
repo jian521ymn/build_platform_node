@@ -1,7 +1,8 @@
 const CONFIG = require('./config'),
 	session = require('express-session'),
 	cookieParser=require("cookie-parser"),
-	bodyParser = require('body-parser')
+	bodyParser = require('body-parser'),
+	cors = require('cors')
 /*-CREATE SERVER-*/
 const express = require('express'),
 	app = express();
