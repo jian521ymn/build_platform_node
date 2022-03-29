@@ -224,4 +224,70 @@ route.get('/branch', (req, res) => {
     });
 });
 
+//11
+const updateStaus=({item_key,status})=>{
+    const loginQuerySql = updateMyspl({
+        name: "BUILD_INFO_LIST",
+        primaryKey: {
+            key: 'item_key',
+            value: item_key,
+        },
+        params: {
+            isDelete: "0",
+            status,
+            operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            operator: '纪晓安'
+        }
+    })
+    mysqlConnection({
+            res,
+            querySql: loginQuerySql,
+    })
+}
+
+//=> 发布流程
+route.post('/build', (req, res) => {
+    const {name, origin_ssh_url,branch,item_key} = req.body
+    // 1.git 拉取
+    updateStaus(item_key,1)
+    .then(res_=>{
+        return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
+    })
+    .then(res_ => {
+        if(res_?.err){
+            res.send(success(false,{msg:err?.err}))
+            return new Error(res_?.err)
+        }
+        return updateStaus(item_key,2)
+    })
+    .then(res_=>{
+        // 2.安装依赖
+       return execPromise(`cd /www/code/${name}  && npm install`)
+    })
+    .then(res_=>{
+        if(res_?.err){
+            res.send(success(false,{msg:res_?.err?.err}))
+            return new Error(res_?.err)
+        }
+        return updateStaus(item_key,3)
+    })
+    .then(res_=>{
+        // 3.yarn build
+        return execPromise(`cd /www/code/${name}  && yarn build`)
+    })
+    .then(res_=>{
+        if(res_?.err){
+            res.send(success(false,{msg:res_?.err?.err}))
+            return new Error(res_?.err)
+        }
+        return updateStaus(item_key,4)
+    })
+    .then(res_=>{
+        return updateStaus(item_key,5)
+    })
+    .then(res_=>{
+        console.log('success');
+    })
+});
+
 module.exports = route;
