@@ -225,8 +225,8 @@ route.get('/branch', (req, res) => {
 });
 
 //11
-const updateStaus=({item_key,status,res})=>{
-    console.log('参数',item_key,status);
+const updateStaus=(item_key,status,res)=>{
+    console.log(item_key,status,'参数');
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
         primaryKey: {
@@ -249,7 +249,6 @@ const updateStaus=({item_key,status,res})=>{
 //=> 发布流程
 route.post('/build', (req, res) => {
     const {name, origin_ssh_url,branch,item_key} = req.body
-    console.log(req.body,'req.body');
     // 1.git 拉取
     updateStaus(item_key,1,res)
     .then(res_=>{
