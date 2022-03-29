@@ -184,16 +184,16 @@ setInterval(() => {
             if(!element)return;
             cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
         }
-        console.log(cmdArr.join(" && "));
         return execPromise(cmdArr.join(" && "))
     })
     .then(res=>{
-        console.log(res,'success');
+        console.log('更新分支，定时任务发布成功！');
     })
 },1*60*1000)
 route.get('/branch', (req, res) => {
+    const {name} =req.query
     // 先更新分支，再获取所有分支
-    execPromise('git branch').then(res_ => {
+    execPromise(`cd /www/code/${name}  && git branch -r`).then(res_ => {
         const {err,stdout} =res_ || {};
         if(err){
             res.send(success(false,{msg:err?.err}))
@@ -204,7 +204,7 @@ route.get('/branch', (req, res) => {
         stdout.split('\n').forEach(item => {
             const branch = item.replace(/(\s)/g, '').replace(/\*/g, '');
             // 忽略为空的分支和远程分支
-            if (branch && !branch.includes('origin/')) {
+            if (branch) {
                 allBranch.push({
                     value:branch,
                     label:branch
