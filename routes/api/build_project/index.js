@@ -181,10 +181,11 @@ setInterval(() => {
         const fileList =stdout.split('\n');
         for (let i = 0; i < fileList.length; i++) {
             const element = fileList[i];
+            if(!element)return;
             cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
         }
         console.log(cmdArr.join(" && "));
-        return execPromise(cmdArr)
+        return execPromise(cmdArr.join(" && "))
     })
     .then(res=>{
         console.log(res,'success');
