@@ -210,7 +210,7 @@ route.get('/branch', (req, res) => {
         stdout.split('\n').forEach(item => {
             const branch = item.replace(/(\s)/g, '').replace(/\*/g, '');
             // 忽略为空的分支和远程分支
-            if (branch && !branch.includes('origin/HEAD -> origin/master')) {
+            if (branch && !branch.includes('origin/HEAD->origin/master')) {
                 allBranch.push({
                     value:branch,
                     label:branch.split('/')[1]
