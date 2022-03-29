@@ -225,7 +225,7 @@ route.get('/branch', (req, res) => {
 });
 
 //11
-const updateStaus=({item_key,status})=>{
+const updateStaus=({item_key,status,res})=>{
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
         primaryKey: {
@@ -239,7 +239,7 @@ const updateStaus=({item_key,status})=>{
             operator: '纪晓安'
         }
     })
-    mysqlConnection({
+   return mysqlConnection({
             res,
             querySql: loginQuerySql,
     })
@@ -249,7 +249,7 @@ const updateStaus=({item_key,status})=>{
 route.post('/build', (req, res) => {
     const {name, origin_ssh_url,branch,item_key} = req.body
     // 1.git 拉取
-    updateStaus(item_key,1)
+    updateStaus(item_key,1,res)
     .then(res_=>{
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
@@ -258,7 +258,7 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,2)
+        return updateStaus(item_key,2,res)
     })
     .then(res_=>{
         // 2.安装依赖
@@ -269,7 +269,7 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,3)
+        return updateStaus(item_key,3,res)
     })
     .then(res_=>{
         // 3.yarn build
@@ -280,10 +280,10 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,4)
+        return updateStaus(item_key,4,res)
     })
     .then(res_=>{
-        return updateStaus(item_key,5)
+        return updateStaus(item_key,5,res)
     })
     .then(res_=>{
         console.log('success');
