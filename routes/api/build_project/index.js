@@ -184,7 +184,7 @@ setInterval(() => {
             cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
         }
         console.log(cmdArr.join(" && "));
-        return execPromise(cmdArr.join(" && "))
+        return execPromise(cmdArr)
     })
     .then(res=>{
         console.log(res,'success');
