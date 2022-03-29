@@ -172,14 +172,24 @@ route.post('/edit', (req, res) => {
 });
 //=> 分支拉取更新
 setInterval(() => {
-    console.log(222222);
     // 定时任务，每隔一分钟更新一次分支列表
-    execPromise('cd /www/code && ls').then((res) => {
+    execPromise('cd /www/code')
+    .then((res) => {
         const {err,stdout} =res || {};
-        console.log(stdout,res);
+        if(err)return;
+        let cmdArr=[]
+        const fileList =stdout.split('\n');
+        for (let i = 0; i < fileList.length; i++) {
+            const element = fileList[i];
+            cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
+        }
+        console.log(cmdArr.join(" && "));
+        return execPromise(cmdArr.join(" && "))
     })
-    execPromise('git remote update origin --p').then(() => {})
-}, 1*6*1000);
+    .then(res=>{
+        console.log(res,'success');
+    })
+},1*60*1000)
 route.get('/branch', (req, res) => {
     // 先更新分支，再获取所有分支
     execPromise('git branch').then(res_ => {
