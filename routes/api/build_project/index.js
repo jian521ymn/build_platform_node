@@ -170,9 +170,10 @@ route.post('/edit', (req, res) => {
             }));
         })
 });
-//=> 分支拉取更新
+
+// 定时任务，每隔一分钟更新一次分支列表
 setInterval(() => {
-    // 定时任务，每隔一分钟更新一次分支列表
+    
     execPromise('cd /www/code && ls')
     .then((res) => {
         const {err,stdout} =res || {};
@@ -189,9 +190,14 @@ setInterval(() => {
     .then(res=>{
         console.log('更新分支，定时任务发布成功！');
     })
-},1*60*1000)
+},1*60*1000);
+
+//=> 分支拉取更新
 route.get('/branch', (req, res) => {
     const {name} =req.query
+    if(!name){
+        res.send(success(false,{msg:"仓库名必填！"}))
+    }
     // 先更新分支，再获取所有分支
     execPromise(`cd /www/code/${name}  && git branch -r`).then(res_ => {
         const {err,stdout} =res_ || {};
@@ -204,10 +210,10 @@ route.get('/branch', (req, res) => {
         stdout.split('\n').forEach(item => {
             const branch = item.replace(/(\s)/g, '').replace(/\*/g, '');
             // 忽略为空的分支和远程分支
-            if (branch) {
+            if (branch && !branch.includes('origin/HEAD -> origin/master')) {
                 allBranch.push({
                     value:branch,
-                    label:branch
+                    label:branch.split('/')[1]
                 })
             }
         })
