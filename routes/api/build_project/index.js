@@ -257,7 +257,7 @@ route.post('/build', (req, res) => {
     })
     .then(res_ => {
         if(res_?.err){
-            res.send(success(false,{msg:err?.err}))
+            res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
         return updateStaus(item_key,2,res)
