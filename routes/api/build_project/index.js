@@ -212,7 +212,7 @@ route.get('/branch', (req, res) => {
             // 忽略为空的分支和远程分支
             if (branch && !branch.includes('HEAD')) {
                 allBranch.push({
-                    value:branch,
+                    value:branch.split('/')[1],
                     label:branch.split('/')[1]
                 })
             }
