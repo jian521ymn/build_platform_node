@@ -68,6 +68,7 @@ route.post('/add', (req, res) => {
     })
     execPromise(`cd /www/code && git clone ${origin_ssh_url}`)
     .then(res_=>{
+        console.log(22222);
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
