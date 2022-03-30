@@ -66,17 +66,24 @@ route.post('/add', (req, res) => {
             operator: '纪晓安'
         }
     })
-    mysqlConnection({
-            res,
-            querySql: loginQuerySql,
-        })
-        .then(({
-            result
-        }) => {
-            res.send(success(true, {
-                data: result
-            }));
-        })
+    execPromise(`cd /www/code && git clone ${origin_ssh_url}`)
+    .then(res_=>{
+        if(res_?.err){
+            res.send(success(false,{msg:res_?.err?.err}))
+            return new Error(res_?.err)
+        }
+        return mysqlConnection({res,querySql: loginQuerySql,})
+    })
+    .then(({
+        result
+    }) => {
+        res.send(success(true, {
+            data: result
+        }));
+    })
+    .catch(err => {
+        res.send(success(false,{msg:err}))
+    })
 });
 //=> 项目删除
 route.get('/delete', (req, res) => {
@@ -225,7 +232,7 @@ route.get('/branch', (req, res) => {
 });
 
 //11
-const updateStaus=(item_key,status,res)=>{
+const updateStaus=(item_key,params,res)=>{
     console.log(item_key,status,'参数');
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
@@ -235,7 +242,7 @@ const updateStaus=(item_key,status,res)=>{
         },
         params: {
             isDelete: "0",
-            status,
+            ...params,
             operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             operator: '纪晓安'
         }
@@ -251,7 +258,7 @@ route.post('/build', (req, res) => {
     const {name, origin_ssh_url,branch,item_key, type} = req.body
     res.send(success(true,{}))
     // 1.git 拉取
-    updateStaus(item_key,1,res)
+    updateStaus(item_key,{status: 1,branch},res)
     .then(res_=>{
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
@@ -260,7 +267,7 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,2,res)
+        return updateStaus(item_key,{status: 2,branch},res)
     })
     .then(res_=>{
         // 2.安装依赖
@@ -271,7 +278,7 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,3,res)
+        return updateStaus(item_key,{status: 3,branch},res)
     })
     .then(res_=>{
         // 3.yarn build
@@ -286,11 +293,11 @@ route.post('/build', (req, res) => {
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
         }
-        return updateStaus(item_key,4,res)
+        return updateStaus(item_key,{status: 4,branch},res)
     })
     .then(res_=>{
         // 5.成功
-        return updateStaus(item_key,5,res)
+        return updateStaus(item_key,{status: 5,branch},res)
     })
     .then(res_=>{
         console.log('success');
