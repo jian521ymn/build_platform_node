@@ -70,7 +70,7 @@ route.post('/add', (req, res) => {
     .then(res_=>{
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
-            throw new Error(res_?.err)
+            throw new Error(res_?.err?.err)
             return 
         }
         return mysqlConnection({res,querySql: loginQuerySql,})
