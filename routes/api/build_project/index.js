@@ -68,24 +68,21 @@ route.post('/add', (req, res) => {
     })
     execPromise(`cd /www/code && git clone ${origin_ssh_url}`)
     .then(res_=>{
-        console.log(22222);
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
+            return 
         }
-        console.log(333);
         return mysqlConnection({res,querySql: loginQuerySql,})
     })
     .then(({
         result
     }) => {
-        console.log(344433);
         res.send(success(true, {
             data: result
         }));
     })
     .catch(err => {
-        console.log(555);
         res.send(success(false,{msg:err}))
     })
 });
@@ -269,7 +266,8 @@ route.post('/build', (req, res) => {
     .then(res_ => {
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
+            return 
         }
         return updateStaus(item_key,{status: 2,branch},res)
     })
@@ -280,7 +278,8 @@ route.post('/build', (req, res) => {
     .then(res_=>{
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
+            return 
         }
         return updateStaus(item_key,{status: 3,branch},res)
     })
@@ -295,7 +294,8 @@ route.post('/build', (req, res) => {
         // 4.更新中
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
+            return 
         }
         return updateStaus(item_key,{status: 4,branch},res)
     })
