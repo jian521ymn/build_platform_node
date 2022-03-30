@@ -197,7 +197,7 @@ setInterval(() => {
     .then(res=>{
         console.log('更新分支，定时任务发布成功！');
     })
-},1*60*1000);
+},2*60*1000);
 
 //=> 分支拉取更新
 route.get('/branch', (req, res) => {
