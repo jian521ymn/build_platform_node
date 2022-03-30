@@ -233,7 +233,6 @@ route.get('/branch', (req, res) => {
 
 //11
 const updateStaus=(item_key,params,res)=>{
-    console.log(item_key,status,'参数');
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
         primaryKey: {
