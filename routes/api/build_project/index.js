@@ -248,7 +248,7 @@ const updateStaus=(item_key,status,res)=>{
 
 //=> 发布流程
 route.post('/build', (req, res) => {
-    const {name, origin_ssh_url,branch,item_key} = req.body
+    const {name, origin_ssh_url,branch,item_key, type} = req.body
     res.send(success(true,{}))
     // 1.git 拉取
     updateStaus(item_key,1,res)
@@ -275,6 +275,9 @@ route.post('/build', (req, res) => {
     })
     .then(res_=>{
         // 3.yarn build
+        if(type.includes('node')){
+            return execPromise(`cd /www/code/${name}`)
+        }
         return execPromise(`cd /www/code/${name}  && yarn build`)
     })
     .then(res_=>{
