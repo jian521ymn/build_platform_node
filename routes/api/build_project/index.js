@@ -79,11 +79,13 @@ route.post('/add', (req, res) => {
     .then(({
         result
     }) => {
+        console.log(344433);
         res.send(success(true, {
             data: result
         }));
     })
     .catch(err => {
+        console.log(555);
         res.send(success(false,{msg:err}))
     })
 });
