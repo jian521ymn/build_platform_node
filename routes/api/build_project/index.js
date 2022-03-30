@@ -294,6 +294,8 @@ route.post('/build', (req, res) => {
     })
     .then(res_=>{
         console.log('success');
+    }).catch(err=>{
+        res.send(success(false,{msg:err}))
     })
 });
 
