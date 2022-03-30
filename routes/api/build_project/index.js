@@ -278,6 +278,7 @@ route.post('/build', (req, res) => {
         return execPromise(`cd /www/code/${name}  && yarn build`)
     })
     .then(res_=>{
+        // 4.更新中
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
@@ -285,6 +286,7 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,4,res)
     })
     .then(res_=>{
+        // 5.成功
         return updateStaus(item_key,5,res)
     })
     .then(res_=>{
