@@ -264,8 +264,7 @@ route.post('/build', (req, res) => {
     .then(res_ => {
         console.log(res_,'res_');
         if(res_?.err){
-            res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
         }
         return updateStaus(item_key,{status: 2,branch},res)
     })
@@ -275,8 +274,7 @@ route.post('/build', (req, res) => {
     })
     .then(res_=>{
         if(res_?.err){
-            res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
         }
         return updateStaus(item_key,{status: 3,branch},res)
     })
@@ -290,8 +288,7 @@ route.post('/build', (req, res) => {
     .then(res_=>{
         // 4.更新中
         if(res_?.err){
-            res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
+            throw new Error(res_?.err)
         }
         return updateStaus(item_key,{status: 4,branch},res)
     })
