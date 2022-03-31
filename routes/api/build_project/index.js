@@ -271,7 +271,7 @@ route.post('/build', (req, res) => {
     })
     .then(res_=>{
         // 2.安装依赖
-       return execPromise(`cd /www/code/${name}  && yarn`)
+       return execPromise(`cd /www/code/${name}  && npm install`)
     })
     .then(res_=>{
         if(res_?.err){
