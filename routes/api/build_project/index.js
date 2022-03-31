@@ -262,6 +262,7 @@ route.post('/build', (req, res) => {
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
     .then(res_ => {
+        console.log(res_,'res_');
         if(res_?.err){
             res.send(success(false,{msg:res_?.err?.err}))
             return new Error(res_?.err)
