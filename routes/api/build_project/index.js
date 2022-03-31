@@ -181,22 +181,22 @@ route.post('/edit', (req, res) => {
 // 定时任务，每隔一分钟更新一次分支列表
 setInterval(() => {
     
-    execPromise('cd /www/code && ls')
-    .then((res) => {
-        const {err,stdout} =res || {};
-        if(err)return;
-        let cmdArr=[]
-        const fileList =stdout.split('\n');
-        for (let i = 0; i < fileList.length; i++) {
-            const element = fileList[i];
-            if(!element)return;
-            cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
-        }
-        return execPromise(cmdArr.join(" && "))
-    })
-    .then(res=>{
-        console.log('更新分支，定时任务发布成功！');
-    })
+    // execPromise('cd /www/code && ls')
+    // .then((res) => {
+    //     const {err,stdout} =res || {};
+    //     if(err)return;
+    //     let cmdArr=[]
+    //     const fileList =stdout.split('\n');
+    //     for (let i = 0; i < fileList.length; i++) {
+    //         const element = fileList[i];
+    //         if(!element)return;
+    //         cmdArr.push(`cd /www/code/${element} && git remote update origin --p`)
+    //     }
+    //     return execPromise(cmdArr.join(" && "))
+    // })
+    // .then(res=>{
+    //     console.log('更新分支，定时任务发布成功！');
+    // })
 },2*60*1000);
 
 //=> 分支拉取更新
