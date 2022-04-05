@@ -231,7 +231,7 @@ route.get('/branch', (req, res) => {
     });
 });
 
-//11
+//更新发布状态
 const updateStaus=(item_key,params,res)=>{
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
@@ -251,6 +251,37 @@ const updateStaus=(item_key,params,res)=>{
             querySql: loginQuerySql,
     })
 }
+// 创建或更新部署记录
+const createOrUpdateStaus=(item_key,params,res)=>{
+    const {page,status} = params;
+    let page_ = ''
+    if(status === 1 && page){
+        page_ = page
+        delete params.page
+    }
+    const createSql = addMyspl({
+        name:"BUILD_INFO_RECORD",
+        params:{...params, item_key},
+        page
+    })
+    const loginQuerySql = updateMyspl({
+        name: "BUILD_INFO_RECORD",
+        primaryKey: {
+            key: 'item_key',
+            value: item_key,
+        },
+        params: {
+            ...params,
+            operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            operator: '纪晓安'
+        }
+    })
+    const querySql = status === 1 ? createSql : loginQuerySql
+   return mysqlConnection({
+            res,
+            querySql,
+    })
+}
 
 //=> 发布流程
 route.post('/build', (req, res) => {
@@ -258,6 +289,9 @@ route.post('/build', (req, res) => {
     res.send(success(true,{}))
     // 1.git 拉取
     updateStaus(item_key,{status: 1,branch},res)
+    .then(res_=>{
+       return createOrUpdateStaus(item_key,{status: 1,branch},res)
+    })
     .then(res_=>{
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
@@ -269,6 +303,9 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 2,branch},res)
     })
     .then(res_=>{
+        return createOrUpdateStaus(item_key,{status: 2,branch},res)
+     })
+    .then(res_=>{
         // 2.安装依赖
        return execPromise(`cd /www/code/${name}  && yarn`)
     })
@@ -278,6 +315,9 @@ route.post('/build', (req, res) => {
         }
         return updateStaus(item_key,{status: 3,branch},res)
     })
+    .then(res_=>{
+        return createOrUpdateStaus(item_key,{status: 3,branch},res)
+     })
     .then(res_=>{
         // 3.yarn build
         if(type.includes('node')){
@@ -293,9 +333,15 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 4,branch},res)
     })
     .then(res_=>{
+        return createOrUpdateStaus(item_key,{status: 4,branch},res)
+     })
+    .then(res_=>{
         // 5.成功
         return updateStaus(item_key,{status: 5,branch},res)
     })
+    .then(res_=>{
+        return createOrUpdateStaus(item_key,{status: 5,branch},res)
+     })
     .then(res_=>{
         console.log('success');
     }).catch(err=>{
