@@ -28,7 +28,7 @@ const updateMyspl = (param)=>{
 // 查询数据库字段
 const queryMyspl = (param)=>{
     const {name,params,page,like="LIKE",sort} = param || {}
-    let isZeroParams=Object.keys(params).length === 0 ? '' : "` WHERE "
+    let isZeroParams=Object.keys(params).length === 0 ? '`' : "` WHERE "
     let before = "SELECT SQL_CALC_FOUND_ROWS * FROM `"+ name+ isZeroParams;
     let middle = Object.keys(params).reduce((val,next,index)=>{
         if(index === 0){
