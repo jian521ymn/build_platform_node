@@ -328,6 +328,7 @@ route.post('/build', (req, res) => {
        return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name},res)
     })
     .then(res_=>{
+        console.log(res_,'66666');
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
     .then(res_ => {
