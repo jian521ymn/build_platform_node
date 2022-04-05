@@ -300,8 +300,8 @@ route.get('/record', (req, res) => {
     .then(({result,total}) => {
         res.send(success(true, {
             data: {
-                page_num,
-                page_size,
+                page_num:Number(page_num),
+                page_size:Number(page_size),
                 total,
                 list:result.map(item => ({
                     ...item,
