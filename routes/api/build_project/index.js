@@ -289,11 +289,9 @@ route.get('/record', (req, res) => {
     const page_ = page(req.query)
     const params ={name,remark_name}
     let newParams ={};
-    let newParamsSort ={}
     Object.keys(params).forEach(item=>{
         if(params[item]){
            newParams[item] = params[item]
-           newParamsSort[item]='DESC'
         }
     })
     console.log(newParams,'newParams');
@@ -301,7 +299,7 @@ route.get('/record', (req, res) => {
         name: "BUILD_INFO_RECORD",
         params:newParams || {},
         page:page_,
-        sort:newParamsSort||{}
+        sort:{operating_time:"DESC"}
     })
     mysqlConnection({res,querySql,isSearchList:true})
     .then(({result,total}) => {
