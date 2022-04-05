@@ -326,7 +326,7 @@ route.post('/build', (req, res) => {
     // 1.git 拉取
     updateStaus(item_key,{status: 1,branch},res)
     .then(res_=>{
-       return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name},res)
+       return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name,item_key},res)
     })
     .then(res_=>{
         createId = res_.result.insertId
@@ -340,7 +340,7 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 2,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 2,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 2},res)
      })
     .then(res_=>{
         // 2.安装依赖
@@ -353,7 +353,7 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 3,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 3,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 3},res)
      })
     .then(res_=>{
         // 3.yarn build
@@ -370,21 +370,21 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 4,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 4,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 4},res)
      })
     .then(res_=>{
         // 5.成功
         return updateStaus(item_key,{status: 5,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 5,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 5},res)
      })
     .then(res_=>{
         console.log('success');
     }).catch(err=>{
         updateStaus(item_key,{status: 0,branch},res)
         .then(res_=>{
-            createOrUpdateStaus(createId,{status: 0,branch,name,remark_name},res)
+            createOrUpdateStaus(createId,{status: 0},res)
         })
     })
 });
