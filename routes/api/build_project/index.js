@@ -299,7 +299,6 @@ route.get('/record', (req, res) => {
         name: "BUILD_INFO_RECORD",
         params:newParams || {},
         page:page_,
-        sort:{name:'DESC',remark_name:'DESC'}
     })
     mysqlConnection({res,querySql,isSearchList:true})
     .then(({result,total}) => {
