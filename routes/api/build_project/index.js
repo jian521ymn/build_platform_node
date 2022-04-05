@@ -253,7 +253,7 @@ const updateStaus=(item_key,params,res)=>{
     })
 }
 // 创建或更新部署记录
-const createOrUpdateStaus=(item_key,params,res)=>{
+const createOrUpdateStaus=(createId,params,res)=>{
     const {page,status} = params;
     let page_ = ''
     if(status === 1 && page){
@@ -262,14 +262,14 @@ const createOrUpdateStaus=(item_key,params,res)=>{
     }
     const createSql = addMyspl({
         name:"BUILD_INFO_RECORD",
-        params:{...params, item_key},
+        params:{...params, id:createId},
         page
     })
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_RECORD",
         primaryKey: {
-            key: 'item_key',
-            value: item_key,
+            key: 'id',
+            value: createId,
         },
         params: {
             ...params,
@@ -320,7 +320,8 @@ route.get('/record', (req, res) => {
 
 //=> 发布流程
 route.post('/build', (req, res) => {
-    const {name, origin_ssh_url,branch,item_key, type, remark_name} = req.body
+    const {name, origin_ssh_url,branch,item_key, type, remark_name} = req.body;
+    let createId =''
     res.send(success(true,{}))
     // 1.git 拉取
     updateStaus(item_key,{status: 1,branch},res)
@@ -328,7 +329,7 @@ route.post('/build', (req, res) => {
        return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name},res)
     })
     .then(res_=>{
-        console.log(res_.result.insertId,'66666');
+        createId = res_.result.insertId
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
     .then(res_ => {
@@ -339,7 +340,7 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 2,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(item_key,{status: 2,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 2,branch,name,remark_name},res)
      })
     .then(res_=>{
         // 2.安装依赖
@@ -352,7 +353,7 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 3,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(item_key,{status: 3,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 3,branch,name,remark_name},res)
      })
     .then(res_=>{
         // 3.yarn build
@@ -369,21 +370,21 @@ route.post('/build', (req, res) => {
         return updateStaus(item_key,{status: 4,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(item_key,{status: 4,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 4,branch,name,remark_name},res)
      })
     .then(res_=>{
         // 5.成功
         return updateStaus(item_key,{status: 5,branch},res)
     })
     .then(res_=>{
-        return createOrUpdateStaus(item_key,{status: 5,branch,name,remark_name},res)
+        return createOrUpdateStaus(createId,{status: 5,branch,name,remark_name},res)
      })
     .then(res_=>{
         console.log('success');
     }).catch(err=>{
         updateStaus(item_key,{status: 0,branch},res)
         .then(res_=>{
-            createOrUpdateStaus(item_key,{status: 0,branch,name,remark_name},res)
+            createOrUpdateStaus(createId,{status: 0,branch,name,remark_name},res)
         })
     })
 });
