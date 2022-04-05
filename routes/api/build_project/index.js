@@ -288,14 +288,16 @@ route.get('/record', (req, res) => {
     const {name,remark_name,page_num,page_size} = req.query;
     const page_ = page(req.query)
     const params ={name,remark_name}
+    let newParams ={}
     Object.keys(params).forEach(item=>{
-        if(!params[item]){
-            delete params.item
+        if(params[item]){
+           newParams[item] = params[item]
         }
     })
+    console.log(newParams,'newParams');
     const querySql = queryMyspl({
         name: "BUILD_INFO_RECORD",
-        params,
+        params:newParams || {},
         page:page_,
         sort:{name:'DESC',remark_name:'DESC'}
     })
