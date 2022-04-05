@@ -15,7 +15,7 @@ const updateMyspl = (param)=>{
         return val + "`"+next+"` = '"+params[next]+(index!==Object.keys(params).length-1?"', ":"' ")
     },"")
     let after = "WHERE `"+ name +"`.`"+ key +"` ="+" "+ (isString?"'"+value+"'":value);
-    // console.log(before+middle+after,'修改指令',dayjs().format('YYYY-MM-DD HH:mm:ss'))
+    console.log(before+middle+after,'修改指令',dayjs().format('YYYY-MM-DD HH:mm:ss'))
     return before+middle+after
 }
 /**
@@ -46,7 +46,7 @@ const queryMyspl = (param)=>{
         return str
     } ,"ORDER BY ")
     let LIMIT =page ? ` LIMIT ${page}` : ''
-    // console.log(before+middle+after+LIMIT,'查询指令',dayjs().format('YYYY-MM-DD HH:mm:ss'))
+    console.log(before+middle+after+LIMIT,'查询指令',dayjs().format('YYYY-MM-DD HH:mm:ss'))
     return before+middle+after+LIMIT
 }
 /**
@@ -63,7 +63,7 @@ const addMyspl = (param)=>{
         if(index ===Object.values(params).length-1){return str+=("'"+next+"'")};
         return str+= ("'"+next+"'")+","
     },"") +") "
-    // console.log(before+middle+" VALUES "+ after,'新增指令', dayjs().format('YYYY-MM-DD HH:mm:ss'))
+    console.log(before+middle+" VALUES "+ after,'新增指令', dayjs().format('YYYY-MM-DD HH:mm:ss'))
     return before+middle+" VALUES "+ after
 }
 module.exports = {updateMyspl, queryMyspl, addMyspl}
