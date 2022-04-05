@@ -14,6 +14,7 @@ const {
     addMyspl,
 } = require('../../../utils/operationMysql');
 const {execPromise} = require('jian_ymn_node/fs/index');
+const {page} =require('jian_ymn_node/fs/index')
 
 //=> 项目列表
 route.get('/list', (req, res) => {
@@ -282,6 +283,36 @@ const createOrUpdateStaus=(item_key,params,res)=>{
             querySql,
     })
 }
+//=> 查询部署记录
+route.get('/record', (req, res) => {
+    const {name,remark_name,page_num,page_size} = req.query;
+    const page_ = page(req.query)
+    const querySql = queryMyspl({
+        name: "BUILD_INFO_RECORD",
+        params: {
+            name,
+            remark_name,
+        },
+        page:page_,
+        sort:{name:'DESC',remark_name:'DESC'}
+    })
+    mysqlConnection({res,querySql,isSearchList:true})
+    .then(({result,total}) => {
+        res.send(success(true, {
+            data: {
+                page_num,
+                page_size,
+                total,
+                list:result.map(item => ({
+                    ...item,
+                    operating_time: dayjs(item.operating_time).format('YYYY-MM-DD HH:mm:ss')
+                }))
+            }
+        }));
+    }).catch(()=>{
+        res.send(success(false,{msg:'未知异常'}))
+    })
+});
 
 //=> 发布流程
 route.post('/build', (req, res) => {
