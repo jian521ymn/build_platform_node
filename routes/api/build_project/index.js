@@ -262,7 +262,7 @@ const createOrUpdateStaus=(createId,params,res)=>{
     }
     const createSql = addMyspl({
         name:"BUILD_INFO_RECORD",
-        params:{...params, id:createId},
+        params:{...params },
         page
     })
     const loginQuerySql = updateMyspl({
@@ -330,6 +330,7 @@ route.post('/build', (req, res) => {
     })
     .then(res_=>{
         createId = res_.result.insertId
+        console.error(createId,'createId');
         return execPromise(`cd /www/code/${name}  && git checkout ${branch} && git pull`)
     })
     .then(res_ => {
