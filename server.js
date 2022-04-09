@@ -2,7 +2,8 @@ const CONFIG = require('./config'),
 	session = require('express-session'),
 	cookieParser=require("cookie-parser"),
 	bodyParser = require('body-parser'),
-	cors = require('cors')
+	cors = require('cors'),
+	axios = require('axios')
 /*-CREATE SERVER-*/
 const express = require('express'),
 	app = express();
@@ -37,8 +38,16 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
-	// 前置校验
-	next()
+	axios.get('http://114.215.183.5:3334/user/login')
+	.then((response) =>{
+		if(response.code === 0){
+			// 前置校验
+			next()
+		}else{
+			res.send({code:999,msg:登录失效})
+		}
+	})
+	
 });
 
 /*-ROUTE-*/
