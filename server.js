@@ -44,7 +44,7 @@ app.use(async (req, res, next) => {
 			// 前置校验
 			next()
 		}else{
-			res.send({code:999,msg:登录失效})
+			res.send({code:999,msg:"登录失效"})
 		}
 	})
 	
