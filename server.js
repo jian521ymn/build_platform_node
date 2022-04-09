@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({
 app.use(async (req, res, next) => {
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token:'559c1197978b27197d123349f34d01ae'}})
 	.then((response) =>{
-		if(response.code === 0){
+		if(response.data.code === 0){
 			// 前置校验
 			next()
 		}else{
