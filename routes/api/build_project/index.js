@@ -374,6 +374,12 @@ route.post('/build', (req, res) => {
     .then(res_=>{
         return createOrUpdateStaus(createId,{status: 4},res)
      })
+     .then(res_=>{
+         // node 项目重启项目
+         if(type.includes('node')){
+            return execPromise(`pm2 restart ${name}`)
+         }
+     })
     .then(res_=>{
         // 5.成功
         return updateStaus(item_key,{status: 5,branch},res)
