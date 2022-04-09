@@ -46,6 +46,8 @@ app.use(async (req, res, next) => {
 		}else{
 			res.send({code:999,msg:"登录失效"})
 		}
+	}).catch((err) =>{
+		res.send({code:999,msg:"登录失效"})
 	})
 	
 });
