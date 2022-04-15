@@ -40,9 +40,10 @@ app.use(bodyParser.urlencoded({
 
 app.use(async (req, res, next) => {
 	const token =getCookie(req)?.token || req.query?.token || ''
+	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token}})
 	.then((response) =>{
-		// console.log(response,'res');
+		console.log(response.data?.data?.code,'res',token);
 		if(response.data?.data?.code === 0){
 			// 前置校验
 			res.setHeader('Set-Cookie',`token=${token}`);
