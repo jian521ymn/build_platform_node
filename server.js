@@ -3,7 +3,8 @@ const CONFIG = require('./config'),
 	cookieParser=require("cookie-parser"),
 	bodyParser = require('body-parser'),
 	cors = require('cors'),
-	axios = require('axios')
+	axios = require('axios');
+const { getCookie } = require('./utils/getCookie');
 /*-CREATE SERVER-*/
 const express = require('express'),
 	app = express();
@@ -38,10 +39,13 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
-	axios.get('http://114.215.183.5:3334/user/login',{params:{token:'559c1197978b27197d123349f34d01ae'}})
+	const token =getCookie(req)?.token || req.query?.token || ''
+	axios.get('http://114.215.183.5:3334/user/login',{params:{token}})
 	.then((response) =>{
-		if(response.data.code === 0){
+		// console.log(response,'res');
+		if(response.data?.data?.code === 0){
 			// 前置校验
+			res.setHeader('Set-Cookie',`token=${token}`);
 			next()
 		}else{
 			res.send({code:999,msg:"登录失效"})
