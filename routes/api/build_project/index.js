@@ -35,7 +35,6 @@ route.get('/list', (req, res) => {
         .then(({
             result
         }) => {
-            res.setHeader('Set-Cookie',`token=59013e1951cd7b5e6693af19a5ceea1e`);
             res.send(success(true, {
                 data: result.map(item => ({
                     ...item,

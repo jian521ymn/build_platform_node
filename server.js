@@ -31,7 +31,7 @@ app.all('*', (req, res, next) => {
     }
 	req.method === 'OPTIONS' ? res.send('CURRENT SERVICES SUPPORT CROSS DOMAIN REQUESTS!') : next();
 });
-app.use(cookieParser('jianymn'))
+app.use(cookieParser())
 app.use(session(CONFIG.SESSION));
 app.use(bodyParser.json());//数据JSON类型
 app.use(bodyParser.urlencoded({
@@ -39,14 +39,15 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
-	const token =getCookie(req)?.token || req.query?.token || ''
+	const token =getCookie(req)?.token || req.query?.token || req?.cookies.token || ''
 	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token}})
 	.then((response) =>{
 		console.log(response.data?.data?.code,'res',token,response);
 		if(response.data?.data?.code === 0){
 			// 前置校验
-			res.setHeader('Set-Cookie',`token=${token}`);
+// 			res.setHeader('Set-Cookie',`token=${token}`);
+			res.cookie('token',token,{secure:false})
 			next()
 		}else{
 			res.send({code:999,msg:"登录失效"})
