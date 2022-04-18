@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
-	const token =getCookie(req)?.token || req.query?.token || req?.cookies.token || ''
+	const token =req.query?.token || getCookie(req)?.token || req?.cookies.token || ''
 	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token}})
 	.then((response) =>{
