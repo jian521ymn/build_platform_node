@@ -407,7 +407,9 @@ route.get('/restart', (req, res) => {
     }
     execPromise(`pm2 restart ${name}`)
     .then(res_=>{
-        res.send(success(true,{}))
+        setTimeout(()=>{
+            res.send(success(true,{}))
+        },1000)
     })
     .catch((err)=>{
         res.send(success(false,{msg:'项目重启失败！'}))
