@@ -18,6 +18,7 @@ const {page} =require('jian_ymn_node/fs/index')
 
 //=> 项目列表
 route.get('/list', (req, res) => {
+    console.log(res.ccokie,'rescookie');
     const {
         page_size,
         page_num
