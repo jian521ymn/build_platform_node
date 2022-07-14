@@ -43,14 +43,14 @@ app.use(async (req, res, next) => {
 	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token,type:'build_platform',path:req.originalUrl.split('?')[0]}})
 	.then((response) =>{
-		console.log(response.data?.data?.code,'res',token,response);
-		if(response.data?.data?.code === 0){
+		const {code,msg} =response.data?.data
+		if(code === 0){
 			// 前置校验
 // 			res.setHeader('Set-Cookie',`token=${token}`);
 			res.cookie('token',token,{secure:false})
 			next()
 		}else{
-			res.send({code:999,msg:"登录失效"})
+			res.send({code:999,msg})
 		}
 	}).catch((err) =>{
 		console.log(err);
