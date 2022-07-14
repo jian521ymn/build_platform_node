@@ -377,9 +377,9 @@ route.post('/build', (req, res) => {
      })
      .then(res_=>{
          // node 项目重启项目
-         if(type.includes('node')){
-            return execPromise(`pm2 restart ${name}`)
-         }
+        //  if(type.includes('node')){
+        //     return execPromise(`pm2 restart ${name}`)
+        //  }
      })
     .then(res_=>{
         // 5.成功
@@ -397,5 +397,21 @@ route.post('/build', (req, res) => {
         })
     })
 });
+
+//=>项目重启
+route.get('/restart', (req, res) => {
+    const { name } = req.query || {};
+    if(!name) {
+        res.send(success(false,{msg:'项目key必填！'}))
+        return
+    }
+    execPromise(`pm2 restart ${name}`)
+    .then(res_=>{
+        res.send(success(true,{}))
+    })
+    .catch((err)=>{
+        res.send(success(false,{msg:'项目重启失败！'}))
+    })
+})
 
 module.exports = route;
