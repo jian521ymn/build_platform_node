@@ -50,7 +50,7 @@ app.use(async (req, res, next) => {
 			res.cookie('token',token,{secure:false})
 			next()
 		}else{
-			res.send({code:999,msg})
+			res.send({code,msg})
 		}
 	}).catch((err) =>{
 		console.log(err);
