@@ -257,7 +257,7 @@ const updateStaus=(item_key,params,res,req)=>{
     })
 }
 // 创建或更新部署记录
-const createOrUpdateStaus=(createId,params,res)=>{
+const createOrUpdateStaus=(createId,params,res,req)=>{
     const { userName='' } = req.query
     const {page,status} = params;
     let page_ = ''
