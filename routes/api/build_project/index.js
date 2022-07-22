@@ -54,6 +54,7 @@ route.post('/add', (req, res) => {
         type,
         remark_name
     } = req.body;
+    const { userName='' } = req.query
     const loginQuerySql = addMyspl({
         name: "BUILD_INFO_LIST",
         params: {
@@ -65,7 +66,7 @@ route.post('/add', (req, res) => {
             type,
             remark_name,
             item_key: createUuid(),
-            operator: '纪晓安'
+            operator: userName,
         }
     })
     execPromise(`cd /www/code && git clone ${origin_ssh_url}`)
@@ -149,6 +150,7 @@ route.post('/edit', (req, res) => {
         type,
         remark_name
     } = req.body;
+    const { userName='' } = req.query
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
         primaryKey: {
@@ -164,7 +166,7 @@ route.post('/edit', (req, res) => {
             type,
             remark_name,
             operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            operator: '纪晓安'
+            operator: userName
         }
     })
     mysqlConnection({
@@ -234,7 +236,8 @@ route.get('/branch', (req, res) => {
 });
 
 //更新发布状态
-const updateStaus=(item_key,params,res)=>{
+const updateStaus=(item_key,params,res,req)=>{
+    const { userName } = req.query
     const loginQuerySql = updateMyspl({
         name: "BUILD_INFO_LIST",
         primaryKey: {
@@ -245,7 +248,7 @@ const updateStaus=(item_key,params,res)=>{
             isDelete: "0",
             ...params,
             operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            operator: '纪晓安'
+            operator: userName
         }
     })
    return mysqlConnection({
@@ -255,6 +258,7 @@ const updateStaus=(item_key,params,res)=>{
 }
 // 创建或更新部署记录
 const createOrUpdateStaus=(createId,params,res)=>{
+    const { userName='' } = req.query
     const {page,status} = params;
     let page_ = ''
     if(status === 1 && page){
@@ -275,7 +279,7 @@ const createOrUpdateStaus=(createId,params,res)=>{
         params: {
             ...params,
             operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            operator: '纪晓安'
+            operator: userName
         }
     })
     const querySql = status === 1 ? createSql : loginQuerySql
@@ -326,9 +330,9 @@ route.post('/build', (req, res) => {
     let createId =''
     res.send(success(true,{}))
     // 1.git 拉取
-    updateStaus(item_key,{status: 1,branch},res)
+    updateStaus(item_key,{status: 1,branch},res,req)
     .then(res_=>{
-       return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name,item_key},res)
+       return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name,item_key},res,req)
     })
     .then(res_=>{
         createId = res_.result.insertId
@@ -339,10 +343,10 @@ route.post('/build', (req, res) => {
         if(res_?.err){
             throw new Error(res_?.err)
         }
-        return updateStaus(item_key,{status: 2,branch},res)
+        return updateStaus(item_key,{status: 2,branch},res,req)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 2},res)
+        return createOrUpdateStaus(createId,{status: 2},res,req)
      })
     .then(res_=>{
         // 2.安装依赖
@@ -352,10 +356,10 @@ route.post('/build', (req, res) => {
         if(res_?.err){
             throw new Error(res_?.err)
         }
-        return updateStaus(item_key,{status: 3,branch},res)
+        return updateStaus(item_key,{status: 3,branch},res,req)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 3},res)
+        return createOrUpdateStaus(createId,{status: 3},res,req)
      })
     .then(res_=>{
         // 3.yarn build
@@ -369,10 +373,10 @@ route.post('/build', (req, res) => {
         if(res_?.err){
             throw new Error(res_?.err)
         }
-        return updateStaus(item_key,{status: 4,branch},res)
+        return updateStaus(item_key,{status: 4,branch},res,req)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 4},res)
+        return createOrUpdateStaus(createId,{status: 4},res,req)
      })
      .then(res_=>{
          // node 项目重启项目
@@ -382,17 +386,17 @@ route.post('/build', (req, res) => {
      })
     .then(res_=>{
         // 5.成功
-        return updateStaus(item_key,{status: 5,branch},res)
+        return updateStaus(item_key,{status: 5,branch},res,req)
     })
     .then(res_=>{
-        return createOrUpdateStaus(createId,{status: 5},res)
+        return createOrUpdateStaus(createId,{status: 5},res,req)
      })
     .then(res_=>{
         console.log('success');
     }).catch(err=>{
-        updateStaus(item_key,{status: 0,branch},res)
+        updateStaus(item_key,{status: 0,branch},res,req)
         .then(res_=>{
-            createOrUpdateStaus(createId,{status: 0},res)
+            createOrUpdateStaus(createId,{status: 0},res,req)
         })
     })
 });

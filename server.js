@@ -43,10 +43,11 @@ app.use(async (req, res, next) => {
 	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token,type:'build_platform',path:req.originalUrl.split('?')[0]}})
 	.then((response) =>{
-		const {code,msg} =response.data?.data
+		const { code, msg, userNames:userName } =response.data?.data
 		if(code === 0){
 			// 前置校验
 // 			res.setHeader('Set-Cookie',`token=${token}`);
+			req.query=userName
 			res.cookie('token',token,{secure:false})
 			next()
 		}else{
