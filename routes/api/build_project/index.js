@@ -14,7 +14,13 @@ const {
     addMyspl,
 } = require('../../../utils/operationMysql');
 const {execPromise} = require('jian_ymn_node/fs/index');
-const {page} =require('jian_ymn_node/fs/index')
+// const {page} =require('jian_ymn_node/fs/index')
+const page = ({
+    page_num=1,
+    page_size=10
+}) => {
+   return `${page_size*(page_num-1)},${page_size}`
+}
 
 //=> 项目列表
 route.get('/list', (req, res) => {
@@ -290,9 +296,9 @@ const createOrUpdateStaus=(createId,params,res,req)=>{
 }
 //=> 查询部署记录
 route.get('/record', (req, res) => {
-    const {name,remark_name,page_num,page_size} = req.query;
+    const {name,remark_name,item_key,page_num,page_size} = req.query;
     const page_ = page(req.query)
-    const params ={name,remark_name}
+    const params ={name,remark_name,item_key}
     let newParams ={};
     Object.keys(params).forEach(item=>{
         if(params[item]){
