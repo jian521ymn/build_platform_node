@@ -57,7 +57,6 @@ route.post('/add', (req, res) => {
         product_desc,
         product_url,
     } = req.body;
-    const { userName='' } = req.query
     const loginQuerySql = addMyspl({
         name: "PRODUCT",
         params: {
@@ -65,7 +64,6 @@ route.post('/add', (req, res) => {
             product_name,
             product_desc,
             product_url,
-            operator: userName,
         }
     })
     mysqlConnection({res,querySql: loginQuerySql,})
