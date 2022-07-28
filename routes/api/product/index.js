@@ -53,41 +53,27 @@ route.get('/list', (req, res) => {
 //=> 项目新增
 route.post('/add', (req, res) => {
     const {
-        level,
-        name,
-        origin_ssh_url,
-        release_num,
-        type,
-        remark_name
+        product_name,
+        product_desc,
+        product_url,
     } = req.body;
     const { userName='' } = req.query
     const loginQuerySql = addMyspl({
         name: "PRODUCT",
         params: {
             isDelete: "0",
-            level,
-            name,
-            origin_ssh_url,
-            release_num,
-            type,
-            remark_name,
-            item_key: createUuid(),
+            product_name,
+            product_desc,
+            product_url,
             operator: userName,
         }
     })
-    execPromise(`cd /www/code && git clone ${origin_ssh_url}`)
-    .then(res_=>{
-        if(res_?.err){
-            res.send(success(false,{msg:res_?.err?.err}))
-            return new Error(res_?.err)
-        }
-        return mysqlConnection({res,querySql: loginQuerySql,})
-    })
+    mysqlConnection({res,querySql: loginQuerySql,})
     .then(({
         result
     }) => {
         res.send(success(true, {
-            data: result
+            data: []
         }));
     })
     .catch(err => {
