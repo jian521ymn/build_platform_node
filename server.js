@@ -46,7 +46,7 @@ app.use(async (req, res, next) => {
 		const { code, msg, userNames:userName } =response.data?.data
 		if(code === 0){
 			// 前置校验
-// 			res.setHeader('Set-Cookie',`token=${token}`);
+			res.setHeader('Set-Cookie',`token=${token}`);
 			req.query.userName=userName
 			res.cookie('token',token,{secure:false})
 			next()
@@ -62,6 +62,7 @@ app.use(async (req, res, next) => {
 
 /*-ROUTE-*/
 app.use('/api/build_project', require('./routes/api/build_project/index.js'));
+app.use('/api/product', require('./routes/api/product/index.js'));
 
 app.use((req, res) => {
 	res.status(404);
