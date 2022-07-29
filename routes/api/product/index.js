@@ -184,29 +184,18 @@ route.post('/record_create', (req, res) => {
 })
 //=> 查询部署记录
 route.get('/record', (req, res) => {
-    const {name,remark_name,item_key,page_num,page_size} = req.query;
-    const page_ = page(req.query)
-    const params ={name,remark_name,item_key}
-    let newParams ={};
-    Object.keys(params).forEach(item=>{
-        if(params[item]){
-           newParams[item] = params[item]
-        }
-    })
-    console.log(newParams,'newParams');
+    const {date} = req.query;
     const querySql = queryMyspl({
-        name: "BUILD_INFO_RECORD",
-        params:newParams || {},
-        page:page_,
+        name: "PRODUCT_RECORD",
+        params: {
+            date:`%${date}%`
+        },
         sort:{operating_time:"DESC"}
     })
     mysqlConnection({res,querySql,isSearchList:true})
     .then(({result,total}) => {
         res.send(success(true, {
             data: {
-                page_num:Number(page_num),
-                page_size:Number(page_size),
-                total,
                 list:result.map(item => ({
                     ...item,
                     operating_time: dayjs(item.operating_time).format('YYYY-MM-DD HH:mm:ss')
