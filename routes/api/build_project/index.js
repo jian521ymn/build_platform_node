@@ -339,11 +339,18 @@ route.post('/build', (req, res) => {
     // 是否重新克隆项目拉取
     new Promise((resolve,reject) => {
         if(isReclone){
-            execPromise(`cd /www/code  && rm -rf ${name} && git clone ${origin_ssh_url}`).then(() => {
+            // cd指定目录，并删除当前项目，在重新克隆项目
+            const reClone =()=>execPromise(`cd /www/code  && rm -rf ${name} && git clone ${origin_ssh_url}`).then(() => {
                 resolve()
             }).catch(() => {
                 reject()
             })
+            execPromise(`cd /www/code${name}/build/.user.ini  && chattr -i /www/code/${name}/build/.user.ini`).then(() => {
+                reClone()
+            }).catch(err=>{
+                reClone()
+            })
+            
         }else{
             resolve()
         }
