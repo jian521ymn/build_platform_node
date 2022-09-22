@@ -333,7 +333,7 @@ route.get('/record', (req, res) => {
 //=> 发布流程
 route.post('/build', (req, res) => {
     const {name, origin_ssh_url,branch,item_key, type, remark_name,config} = req.body;
-    const { isReclone } = config || {};
+    const isReclone = config?.includes('isReclone');
     let createId =''
     res.send(success(true,{}))
     // 是否重新克隆项目拉取
