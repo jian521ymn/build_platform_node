@@ -332,11 +332,25 @@ route.get('/record', (req, res) => {
 
 //=> 发布流程
 route.post('/build', (req, res) => {
-    const {name, origin_ssh_url,branch,item_key, type, remark_name} = req.body;
+    const {name, origin_ssh_url,branch,item_key, type, remark_name,config} = req.body;
+    const { isReclone } = config || {};
     let createId =''
     res.send(success(true,{}))
-    // 1.git 拉取
-    updateStaus(item_key,{status: 1,branch},res,req)
+    // 是否重新克隆项目拉取
+    new Promise((resolve,reject) => {
+        if(isReclone){
+            execPromise(`cd /www/code  && rm -rf ${name} && git clone -b ${name} ${origin_ssh_url}`).then(() => {
+                resolve()
+            }).catch(() => {
+                reject()
+            })
+        }else{
+            resolve()
+        }
+    }).then(res_=>{
+        return updateStaus(item_key,{status: 1,branch},res,req)
+    })
+     // 1.git 拉取
     .then(res_=>{
        return createOrUpdateStaus(item_key,{status: 1,branch,name,remark_name,item_key},res,req)
     })
