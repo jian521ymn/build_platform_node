@@ -57,11 +57,7 @@ route.post('/voice', (req, res)=>{
             let uploadedPath = inputFile.path;
             //同步重命名文件名 fs.renameSync(oldPath, newPath)
             // fs.renameSync(inputFile.path, newPath);
-            res.send(success(true,{
-                data:{
-                    path:uploadedPath.replace('/www/file/','http://114.215.183.5:88/')
-                }
-            }));
+            res.send(uploadedPath.replace('/www/file/','http://114.215.183.5:88/'));
           } catch (err) {
             console.log(err);
             res.send({ err: "上传失败！" });
