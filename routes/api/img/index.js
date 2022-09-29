@@ -25,6 +25,7 @@ const { createUuid } = require('../../../utils/createUuid')
 const {imgProxyAxios} = require('../../../utils/imgProxyAxios')
 const { fileBufferPromise } = require('../../../utils/fileBufferPromise');
 const { getCookie } = require('../../../utils/getCookie');
+const multiparty = require( "multiparty" )
 
 
 
@@ -43,5 +44,28 @@ route.post('/upload', async (req, res) => {
         }
     })
 });
-
+// MP3语音新增
+route.post('/voice', (req, res)=>{
+    const token =req.query?.token || getCookie(req)?.token || req?.cookies.token || ''
+    let from = new multiparty.Form({
+        uploadDir: '/www/file/voice' // 指定文件存储目录
+    });
+    from.parse(req,(err, fields, files)=>{
+        try {
+            console.log(files,files.files);
+            let inputFile  = files.files[0];
+            let uploadedPath = inputFile.path;
+            //同步重命名文件名 fs.renameSync(oldPath, newPath)
+            fs.renameSync(inputFile.path, newPath);
+            res.send(success(true,{
+                data:{
+                    path:`/www/file/voice/${uploadedPath}`.replace('/www/file/','http://114.215.183.5:88/')
+                }
+            }));
+          } catch (err) {
+            console.log(err);
+            res.send({ err: "上传失败！" });
+          };
+    })
+})
 module.exports = route;
