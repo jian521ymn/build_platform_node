@@ -56,7 +56,7 @@ route.post('/voice', (req, res)=>{
             let inputFile  = files.files[0];
             let uploadedPath = inputFile.path;
             //同步重命名文件名 fs.renameSync(oldPath, newPath)
-            fs.renameSync(inputFile.path, newPath);
+            // fs.renameSync(inputFile.path, newPath);
             res.send(success(true,{
                 data:{
                     path:`/www/file/voice/${uploadedPath}`.replace('/www/file/','http://114.215.183.5:88/')
