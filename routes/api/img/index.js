@@ -59,7 +59,7 @@ route.post('/voice', (req, res)=>{
             // fs.renameSync(inputFile.path, newPath);
             res.send(success(true,{
                 data:{
-                    path:`'http://114.215.183.5:88/voice/${uploadedPath}`
+                    path:uploadedPath.replace('/www/file/','http://114.215.183.5:88/')
                 }
             }));
           } catch (err) {
