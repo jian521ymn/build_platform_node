@@ -26,6 +26,7 @@ const {imgProxyAxios} = require('../../../utils/imgProxyAxios')
 const { fileBufferPromise } = require('../../../utils/fileBufferPromise');
 const { getCookie } = require('../../../utils/getCookie');
 const multiparty = require( "multiparty" )
+const load = require('audio-loader')
 
 
 
@@ -52,12 +53,16 @@ route.post('/voice', (req, res)=>{
     });
     from.parse(req,(err, fields, files)=>{
         try {
-            console.log(files,files.files);
             let inputFile  = files.files[0];
             let uploadedPath = inputFile.path;
             //同步重命名文件名 fs.renameSync(oldPath, newPath)
             // fs.renameSync(inputFile.path, newPath);
-            res.send(uploadedPath.replace('/www/file/','http://114.215.183.5:88/'));
+            load(filePath).then(function (res) {
+                var duration = res.duration
+                fs.renameSync(uploadedPath, uploadedPath.replace('.mp3',`-dur${duration}`));
+                //获取音频时长
+                res.send(uploadedPath.replace('.mp3',`-dur${duration}`).replace('/www/file/','http://114.215.183.5:88/'));
+            });
           } catch (err) {
             console.log(err);
             res.send({ err: "上传失败！" });

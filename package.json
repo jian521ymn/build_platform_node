@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jian521ymn/build_platform_node#readme",
   "dependencies": {
+    "audio-loader": "^1.0.3",
     "axios": "^0.26.1",
     "body-parser": "^1.19.2",
     "cookie-parser": "^1.4.6",
