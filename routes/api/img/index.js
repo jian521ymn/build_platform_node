@@ -57,11 +57,13 @@ route.post('/voice', (req, res)=>{
             let uploadedPath = inputFile.path;
             //同步重命名文件名 fs.renameSync(oldPath, newPath)
             // fs.renameSync(inputFile.path, newPath);
-            load(filePath).then(function (res) {
-                var duration = res.duration
-                fs.renameSync(uploadedPath, uploadedPath.replace('.mp3',`-dur${duration}`));
+            load(uploadedPath).then(function (res_) {
+                var duration = res_.duration.toFixed(1)
+                console.log(duration,'duration')
+                fs.renameSync(uploadedPath, uploadedPath.replace('.mp3',`-dur${duration}.mp3`));
+                console.log(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://114.215.183.5:88/'),'777')
                 //获取音频时长
-                res.send(uploadedPath.replace('.mp3',`-dur${duration}`).replace('/www/file/','http://114.215.183.5:88/'));
+                res.send(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://114.215.183.5:88/'));
             });
           } catch (err) {
             console.log(err);
