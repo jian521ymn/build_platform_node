@@ -706,6 +706,11 @@ jian_ymn_node@^1.0.13:
   resolved "https://registry.npmmirror.com/jian_ymn_node/-/jian_ymn_node-1.0.13.tgz#eb774c7d75a8f431de2f32544983f1fd838e3cd2"
   integrity sha512-2yOIOUTdQMhsxNh6lxc449NTWWOjhr2duwaCj3nDe5t25ARvhVHfZFP0/oHikqh3mr1c2wMVwQfKkCF3L+jGgA==
 
+js-md5@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.npmmirror.com/js-md5/-/js-md5-0.7.3.tgz#b4f2fbb0b327455f598d6727e38ec272cd09c3f2"
+  integrity sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.npmmirror.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"

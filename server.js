@@ -64,6 +64,7 @@ app.use(async (req, res, next) => {
 app.use('/api/build_project', require('./routes/api/build_project/index.js'));
 app.use('/api/product', require('./routes/api/product/index.js'));
 app.use('/api/img', require('./routes/api/img/index.js'));
+app.use('/api', require('./routes/api/currency/index.js'));
 
 app.use((req, res) => {
 	res.status(404);
