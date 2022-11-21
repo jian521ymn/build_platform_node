@@ -39,6 +39,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
+    if(req.originalUrl.indexOf('/stock') !== -1){
+        next()
+        return
+    }
 	const token =req.query?.token || getCookie(req)?.token || req?.cookies.token || ''
 	console.log(token,'token');
 	axios.get('http://114.215.183.5:3334/user/login',{params:{token,type:'build_platform',path:req.originalUrl.split('?')[0]}})
