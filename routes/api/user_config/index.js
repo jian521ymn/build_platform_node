@@ -55,22 +55,17 @@ route.get('/list', (req, res) => {
 route.get('/add', (req, res) => {
     const {
         type,
-        presets_name, 
-        amount_menu,
-        premium_factor, 
-        ApiKey,
-        ApiSecret, 
+        keyword, 
+        transaction_name
     } = req.query;
     const loginQuerySql = addMyspl({
         name: "CURRENCY_CONFIG",
         params: {
             isDelete: "0",
             type,
-            presets_name, 
-            amount_menu,
-            premium_factor, 
-            ApiKey,
-            ApiSecret,
+            type,
+            keyword, 
+            transaction_name
         }
     })
     mysqlConnection({res,querySql: loginQuerySql,})
@@ -142,11 +137,8 @@ route.get('/edit', (req, res) => {
     const {
         id,
         type,
-        presets_name, 
-        amount_menu,
-        premium_factor, 
-        ApiKey,
-        ApiSecret,
+        keyword, 
+        transaction_name
     } = req.query;
     const { userName='' } = req.query
     const loginQuerySql = updateMyspl({
@@ -158,11 +150,8 @@ route.get('/edit', (req, res) => {
         params: {
             isDelete: "0",
             type,
-            presets_name, 
-            amount_menu,
-            premium_factor, 
-            ApiKey,
-            ApiSecret,
+            keyword, 
+            transaction_name
         }
     })
     mysqlConnection({
