@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(async (req, res, next) => {
-    if(req.originalUrl.indexOf('/stock') !== -1 || req.originalUrl.indexOf('/user/config') !== -1){
+    if(req.originalUrl.indexOf('/preset') !== -1 || req.originalUrl.indexOf('/user/config') !== -1){
         next()
         return
     }

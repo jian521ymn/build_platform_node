@@ -25,7 +25,7 @@ const page = ({
 }
 
 //=> 项目列表
-route.get('/stock/list', (req, res) => {
+route.get('/preset/list', (req, res) => {
     const {
         page_size,
         page_num,
@@ -54,7 +54,7 @@ route.get('/stock/list', (req, res) => {
         })
 });
 //=> 项目新增
-route.get('/stock/add', (req, res) => {
+route.get('/preset/add', (req, res) => {
     const {
         type,
         presets_name, 
@@ -88,7 +88,7 @@ route.get('/stock/add', (req, res) => {
     })
 });
 //=> 项目删除
-route.get('/stock/del', (req, res) => {
+route.get('/preset/del', (req, res) => {
     const {
         id
     } = req.query;
@@ -116,7 +116,7 @@ route.get('/stock/del', (req, res) => {
         })
 });
 //=> 项目详情
-route.get('/stock/details', (req, res) => {
+route.get('/preset/details', (req, res) => {
     const {
         id
     } = req.query;
@@ -140,7 +140,7 @@ route.get('/stock/details', (req, res) => {
         })
 });
 //=> 项目更新
-route.get('/stock/edit', (req, res) => {
+route.get('/preset/edit', (req, res) => {
     const {
         id,
         type,
@@ -180,7 +180,7 @@ route.get('/stock/edit', (req, res) => {
         })
 })
 //=> 翻译接口
-route.get('/stock/translate', (req, res) => {
+route.get('/preset/translate', (req, res) => {
     const {
         query
     } = req.query;
