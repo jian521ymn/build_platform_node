@@ -29,13 +29,14 @@ route.get('/preset/list', (req, res) => {
     const {
         page_size,
         page_num,
-        type
+        type,
+        trade_type
     } = req.query;
     const loginQuerySql = queryMyspl({
         name: "CURRENCY",
         params: {
             isDelete: "0",
-            type,
+            type:trade_type,
         }
     })
     mysqlConnection({
@@ -57,6 +58,7 @@ route.get('/preset/list', (req, res) => {
 route.get('/preset/add', (req, res) => {
     const {
         type,
+        trade_type,
         presets_name, 
         amount_menu,
         premium_factor, 
@@ -67,7 +69,7 @@ route.get('/preset/add', (req, res) => {
         name: "CURRENCY",
         params: {
             isDelete: "0",
-            type,
+            type:trade_type,
             presets_name, 
             amount_menu,
             premium_factor, 
@@ -90,13 +92,15 @@ route.get('/preset/add', (req, res) => {
 //=> 项目删除
 route.get('/preset/del', (req, res) => {
     const {
-        id
+        id,
+        trade_type,
+        presets_name,
     } = req.query;
     const loginQuerySql = updateMyspl({
         name: "CURRENCY",
         primaryKey: {
-            key: 'id',
-            value: id,
+            key: 'presets_name',
+            value: presets_name,
             isString:false,
         },
         params: {
@@ -144,6 +148,7 @@ route.get('/preset/edit', (req, res) => {
     const {
         id,
         type,
+        trade_type,
         presets_name, 
         amount_menu,
         premium_factor, 
@@ -159,7 +164,7 @@ route.get('/preset/edit', (req, res) => {
         },
         params: {
             isDelete: "0",
-            type,
+            type:trade_type,
             presets_name, 
             amount_menu,
             premium_factor, 
