@@ -24,17 +24,22 @@ const updateMyspl = (param)=>{
 * page:" 1,10 ", 分页配置，不传则全量
 * like:"LIKE",匹配方式，模糊匹配或精准匹配
 * sort：{ConfigID:ASC,MarketID:DESC}排序字段及其方式
+* noLikeKey:{} 不走默认like排序的key
 */ 
 // 查询数据库字段
 const queryMyspl = (param)=>{
-    const {name,params,page,like="LIKE",sort} = param || {}
+    const {name,params,page,like="LIKE",sort,noLikeKey={}} = param || {}
     let isZeroParams=Object.keys(params).length === 0 ? '`' : "` WHERE "
     let before = "SELECT SQL_CALC_FOUND_ROWS * FROM `"+ name+ isZeroParams;
     let middle = Object.keys(params).reduce((val,next,index)=>{
-        if(index === 0){
-            return val+="`"+next+"` "+like+" '"+params[next]+"' "
+        let likes =like
+        if(Object.keys(noLikeKey).includes(next)){
+            likes=noLikeKey[next]
         }
-        return val + "AND `"+next+"` "+like+" '"+params[next]+"' "
+        if(index === 0){
+            return val+="`"+next+"` "+likes+" '"+params[next]+"' "
+        }
+        return val + "AND `"+next+"` "+likes+" '"+params[next]+"' "
     },"")
     let sortAry =Object.keys(sort || {})
     let after =sortAry.length ===0 ? "":sortAry.reduce((str,next,index)=>{

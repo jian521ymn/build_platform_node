@@ -27,13 +27,29 @@ const page = ({
 route.get('/list', (req, res) => {
     const {
         page_size,
-        page_num
+        page_num,
+        type='',
+        title='',
+        startTime,
+        endTime,
     } = req.query;
+    createNoLikeKey =()=>{
+        let obj ={};
+        if(startTime && endTime){
+            obj.operatingTime='BETWEEN'
+        }
+        return obj
+    }
     const loginQuerySql = queryMyspl({
         name: "KNOWLEDGE",
         params: {
             isDelete: "0",
-        }
+            type:`%${type}%`,
+            title:`%${title}%`,
+            operatingTime: startTime && endTime ? `${startTime}' AND '${endTime}` : `%%`
+        },
+        page:`${page_size*(page_num-1)},${page_size*page_num}`,
+        noLikeKey:createNoLikeKey()
     })
     mysqlConnection({
             res,
