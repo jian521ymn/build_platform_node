@@ -14,6 +14,7 @@ const {
     addMyspl,
 } = require('../../../utils/operationMysql');
 const {execPromise} = require('jian_ymn_node/fs/index');
+const { stringToHex, hexToString } = require('../../../utils/string');
 // const {page} =require('jian_ymn_node/fs/index')
 const page = ({
     page_num=1,
@@ -46,6 +47,7 @@ route.get('/list', (req, res) => {
                 data: {
                     list:result.map(item => ({
                         ...item,
+                        content: hexToString(item.content),
                         operating_time: dayjs(item.operating_time).format('YYYY-MM-DD HH:mm:ss')
                     })),
                     page_num,
@@ -68,7 +70,7 @@ route.post('/add', (req, res) => {
         params: {
             isDelete: "0",
             title,
-            content:JSON.stringify(content),
+            content:stringToHex(content),
             type,
             createor:userNames,
         }
@@ -88,8 +90,9 @@ route.post('/add', (req, res) => {
 //=> 项目删除
 route.get('/delete', (req, res) => {
     const {
-        id
+        id,userNames
     } = req.query;
+    
     const loginQuerySql = updateMyspl({
         name: "KNOWLEDGE",
         primaryKey: {
@@ -99,6 +102,8 @@ route.get('/delete', (req, res) => {
         },
         params: {
             isDelete: "1",
+            operatingTime:dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            operatingor:userNames,
         }
     })
     mysqlConnection({
@@ -133,30 +138,35 @@ route.get('/details', (req, res) => {
             result
         }) => {
             res.send(success(true, {
-                data: result[0]
+                data:{
+                    ...result[0],
+                    content:hexToString(result[0].content)
+                }
             }));
         })
 });
 //=> 项目更新
-route.post('/edit', (req, res) => {
+route.post('/update', (req, res) => {
+    const {userNames} = req.query
     const {
         id,
-        product_name,
-        product_desc,
-        product_url,
+        title,
+        content,
+        type,
     } = req.body;
-    const { userName='' } = req.query
     const loginQuerySql = updateMyspl({
         name: "KNOWLEDGE",
-        primaryKey: {
-            key: 'id',
-            value: id,
-        },
         params: {
             isDelete: "0",
-            product_name,
-            product_desc,
-            product_url,
+            title,
+            content:stringToHex(content),
+            type,
+            operatingTime:dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            operatingor:userNames,
+        },
+        primaryKey:{
+            key:'id',
+            value:id
         }
     })
     mysqlConnection({
@@ -173,45 +183,6 @@ route.post('/edit', (req, res) => {
 });
 
 
-// 创建部署记录
-route.post('/record_create', (req, res) => {
-    const params =req.body
-    const querySql = addMyspl({
-        name: "PRODUCT_RECORD",
-        params: {
-            ...params,
-            operating_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        }
-    })
-    mysqlConnection({res,querySql}).then(res_=>{
-        res.send(success(true,{data:null}))
-    }).catch(err => {
-        res.send(success(false,{data:null}))
-    })
-})
-//=> 查询部署记录
-route.get('/record', (req, res) => {
-    const {date} = req.query;
-    const querySql = queryMyspl({
-        name: "PRODUCT_RECORD",
-        params: {
-            date:`%${date}%`
-        },
-        sort:{operating_time:"DESC"}
-    })
-    mysqlConnection({res,querySql,isSearchList:true})
-    .then(({result,total}) => {
-        res.send(success(true, {
-            data: {
-                list:result.map(item => ({
-                    ...item,
-                    operating_time: dayjs(item.operating_time).format('YYYY-MM-DD HH:mm:ss')
-                }))
-            }
-        }));
-    }).catch(()=>{
-        res.send(success(false,{msg:'未知异常'}))
-    })
-});
+
 
 module.exports = route;
