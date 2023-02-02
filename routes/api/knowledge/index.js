@@ -49,6 +49,9 @@ route.get('/list', (req, res) => {
             operatingTime: startTime && endTime ? `${startTime}' AND '${endTime}` : `%%`
         },
         page:`${page_size*(page_num-1)},${page_size*page_num}`,
+        sort:{
+           id:'DESC' 
+        },
         noLikeKey:createNoLikeKey()
     })
     mysqlConnection({
