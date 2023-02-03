@@ -48,7 +48,7 @@ route.get('/list', (req, res) => {
             title:`%${title}%`,
             operatingTime: startTime && endTime ? `${startTime}' AND '${endTime}` : `%%`
         },
-        page:`${page_size*(page_num-1)},${page_size*page_num}`,
+        page:page({page_size,page_num}),
         sort:{
            id:'DESC' 
         },
