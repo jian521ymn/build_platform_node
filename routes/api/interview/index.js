@@ -82,7 +82,7 @@ route.get('/list/type', (req, res) => {
    
     mysqlConnection({
             res,
-            querySql: 'SELECT type FROM `INTERVIEW`',
+            querySql: 'SELECT type FROM `INTERVIEW` ORDER BY `id` DESC',
             // isSearchList:true,
         })
         .then(({
