@@ -77,6 +77,36 @@ route.get('/list', (req, res) => {
             }));
         })
 });
+//=> 查询所有类型
+route.get('/list/type', (req, res) => {
+   
+    mysqlConnection({
+            res,
+            querySql: 'SELECT type FROM `INTERVIEW`',
+            // isSearchList:true,
+        })
+        .then(({
+            result,total
+        }) => {
+            const ress =result?.reduce((prev,next)=>{
+                next.type= next.type?.replace(/，/g,',')
+                const types = next.type?.split(',')
+                if(types?.length === 1){
+                    prev[next.type]= next.type
+                    return prev
+                }
+                for (let i = 0; i < types.length; i++) {
+                    const element = types[i];
+                    prev[element]=element
+                }
+                prev[next.type]= next.type
+                return prev
+            },{})
+            res.send(success(true, {
+                data: Object.values(ress)
+            }));
+        })
+});
 //=> 项目新增
 route.post('/add', (req, res) => {
     const {userNames} = req.query
@@ -144,7 +174,7 @@ route.get('/delete', (req, res) => {
 });
 //=> 项目详情
 route.get('/details', (req, res) => {
-    const {
+    const { 
         id
     } = req.query;
     const loginQuerySql = queryMyspl({
