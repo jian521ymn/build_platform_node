@@ -52,6 +52,7 @@ app.use(async (req, res, next) => {
 			// 前置校验
 			res.setHeader('Set-Cookie',`token=${token}`);
 			req.query.userName=userName
+			req.query.userNames=userName
 			res.cookie('token',token,{secure:false})
 			next()
 		}else{
