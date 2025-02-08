@@ -41,7 +41,7 @@ route.post('/upload', async (req, res) => {
         if(err){
             res.send(success(false,{msg:err}))
         }else{
-            res.send(success(true,{data:`${fileName.replace('/www/file/','http://114.215.183.5:88/')}`}))
+            res.send(success(true,{data:`${fileName.replace('/www/file/','http://47.94.11.121:88/')}`}))
         }
     })
 });
@@ -61,9 +61,9 @@ route.post('/voice', (req, res)=>{
                 var duration = res_.duration.toFixed(1)
                 console.log(duration,'duration')
                 fs.renameSync(uploadedPath, uploadedPath.replace('.mp3',`-dur${duration}.mp3`));
-                console.log(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://114.215.183.5:88/'),'777')
+                console.log(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://47.94.11.121:88/'),'777')
                 //获取音频时长
-                res.send(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://114.215.183.5:88/'));
+                res.send(uploadedPath.replace('.mp3',`-dur${duration}.mp3`).replace('/www/file/','http://47.94.11.121:88/'));
             });
           } catch (err) {
             console.log(err);

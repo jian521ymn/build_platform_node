@@ -16,7 +16,7 @@ async function mysqlConnection (params) {
     // 和本地数库建立连接
     var connection = mysql.createConnection({
       connectionLimit: 500,
-      host: isProd ? 'localhost' : '114.215.183.5', //远程MySQL数据库的ip地址
+      host: isProd ? 'localhost' : '47.94.11.121', //远程MySQL数据库的ip地址
       user: "build_platform",
       password: "AhAtcEyyjSeSijWE",
       database: "build_platform"
