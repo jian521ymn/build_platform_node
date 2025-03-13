@@ -38,32 +38,32 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
-app.use(async (req, res, next) => {
-    if(req.originalUrl.indexOf('/preset') !== -1 || req.originalUrl.indexOf('/user/config') !== -1){
-        next()
-        return
-    }
-	const token =req.query?.token || getCookie(req)?.token || req?.cookies.token || ''
-	console.log(token,'token');
-	axios.get('http://47.94.11.121:3334/user/login',{params:{token,type:'build_platform',path:req.originalUrl.split('?')[0]}})
-	.then((response) =>{
-		const { code, msg, userNames:userName } =response.data?.data
-		if(code === 0){
-			// 前置校验
-			res.setHeader('Set-Cookie',`token=${token}`);
-			req.query.userName=userName
-			req.query.userNames=userName
-			res.cookie('token',token,{secure:false})
-			next()
-		}else{
-			res.send({code,msg})
-		}
-	}).catch((err) =>{
-		console.log(err);
-		res.send({code:999,msg:"登录失效"})
-	})
+// app.use(async (req, res, next) => {
+//     if(req.originalUrl.indexOf('/preset') !== -1 || req.originalUrl.indexOf('/user/config') !== -1){
+//         next()
+//         return
+//     }
+// 	const token =req.query?.token || getCookie(req)?.token || req?.cookies.token || ''
+// 	console.log(token,'token');
+// 	axios.get('http://47.94.11.121:3334/user/login',{params:{token,type:'build_platform',path:req.originalUrl.split('?')[0]}})
+// 	.then((response) =>{
+// 		const { code, msg, userNames:userName } =response.data?.data
+// 		if(code === 0){
+// 			// 前置校验
+// 			res.setHeader('Set-Cookie',`token=${token}`);
+// 			req.query.userName=userName
+// 			req.query.userNames=userName
+// 			res.cookie('token',token,{secure:false})
+// 			next()
+// 		}else{
+// 			res.send({code,msg})
+// 		}
+// 	}).catch((err) =>{
+// 		console.log(err);
+// 		res.send({code:999,msg:"登录失效"})
+// 	})
 	
-});
+// });
 
 /*-ROUTE-*/
 app.use('/api/knowledge', require('./routes/api/knowledge/index.js'));

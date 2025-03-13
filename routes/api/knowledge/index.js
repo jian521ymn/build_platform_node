@@ -78,7 +78,7 @@ route.get('/list', (req, res) => {
 });
 //=> 项目新增
 route.post('/add', (req, res) => {
-    const {userNames} = req.query
+    const {userNames="测试"} = req.query
     const {
         title,
         content,
@@ -92,6 +92,7 @@ route.post('/add', (req, res) => {
             content:stringToHex(content),
             type,
             createor:userNames,
+            operatingor:userNames,
         }
     })
     mysqlConnection({res,querySql: loginQuerySql,})

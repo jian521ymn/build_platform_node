@@ -9,8 +9,8 @@ const baseMyspl = `build_platform`  //基础库名称
 */ 
 // 更新数据库字段
 const updateMyspl = (param)=>{
-    const {name,params,primaryKey:{key,value, isString =true}} = param||{}
-    let before = "UPDATE `"+ baseMyspl+"`.`"+name+"` SET ";
+    const {name,params,primaryKey:{key,value, isString =true},sqlConfigName} = param||{}
+    let before = "UPDATE `"+ (sqlConfigName ||  baseMyspl)+"`.`"+name+"` SET ";
     let middle = Object.keys(params).reduce((val,next,index)=>{
         return val + "`"+next+"` = '"+params[next]+(index!==Object.keys(params).length-1?"', ":"' ")
     },"")
@@ -61,8 +61,8 @@ const queryMyspl = (param)=>{
 */ 
 // 数据库新增指令
 const addMyspl = (param)=>{
-    const {name,params} = param || {};
-    let before = "INSERT INTO `"+ baseMyspl+ "`.`"+ name+"`";
+    const {name,params,sqlConfigName} = param || {};
+    let before = "INSERT INTO `"+ (sqlConfigName || baseMyspl)+ "`.`"+ name+"`";
     let middle = " ("+ Object.keys(params).map(item=>("`"+item+'`')).join() +") "
     let after = " ("+ Object.values(params).reduce((str,next,index)=>{
         if(index ===Object.values(params).length-1){return str+=("'"+next+"'")};
